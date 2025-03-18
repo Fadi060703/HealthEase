@@ -50,7 +50,7 @@ class CustomUser( AbstractUser , PermissionsMixin ) :
     
 class UserProfile( models.Model ) :
     user = models.OneToOneField( CustomUser , related_name = 'profile_owner' , on_delete = models.CASCADE ) 
-    profile_image = models.ImageField( upload_to = 'profile_images/', null = True, blank = True )
+    profile_image = models.URLField( max_length = 200 , blank = True , null = True ) 
     phone_number = models.CharField( max_length = 17 , blank = True )
     class Gender( models.TextChoices ) :
         MALE = 'M' , 'Male' 

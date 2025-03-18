@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework' , 
     'rest_framework_simplejwt.token_blacklist' , 
 ]
+SUPABSE_URL = 'https://iqtrofyoyeiyccorlwqo.supabase.co'
+SUPABSE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxdHJvZnlveWVpeWNjb3Jsd3FvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIyMDI0NDMsImV4cCI6MjA1Nzc3ODQ0M30.H2bmQG0r-opzgu2JB0i-4mYphaSvBqTFeIotlxnv-FQ' \
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
