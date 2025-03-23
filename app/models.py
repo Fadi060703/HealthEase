@@ -50,7 +50,7 @@ class CustomUser( AbstractUser , PermissionsMixin ) :
     
 class UserProfile( models.Model ) :
     user = models.OneToOneField( CustomUser , related_name = 'profile_owner' , on_delete = models.CASCADE ) 
-    profile_image = models.URLField( max_length = 200 , blank = True , null = True ) 
+    profile_image = models.ImageField( upload_to = 'profile_images/' , null = True , blank = True )
     phone_number = models.CharField( max_length = 17 , blank = True )
     class Gender( models.TextChoices ) :
         MALE = 'M' , 'Male' 
@@ -60,7 +60,6 @@ class UserProfile( models.Model ) :
     languages = models.ManyToManyField( Language ) 
 
 class DoctorProfile( UserProfile ) :
-    doc = models.OneToOneField( CustomUser , related_name = 'doc_profile_owner' , on_delete = models.CASCADE ) 
     speicalization = models.ForeignKey( Speicalization , on_delete = models.CASCADE , related_name = 'doc_spec' )
     class FinanceSign( models.TextChoices ) :
         DOLLAR = '$' , 'Dollar'
@@ -71,5 +70,6 @@ class DoctorProfile( UserProfile ) :
         HOUR = 'Hour' 
         SESSION = 'Session' 
     sign = models.CharField( choices = FinanceSign.choices , max_length = 20 ) 
+    price = models.IntegerField() 
     service_type = models.CharField( choices = TypeOfService.choices , max_length = 20 ) 
     about_me = models.TextField() 

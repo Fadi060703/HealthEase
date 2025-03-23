@@ -66,31 +66,21 @@ class LanguageSerializer( serializers.ModelSerializer ) :
         model = Language
         fields = [ 'name' ]
 
-def upload_to_supabse( file , name ) :
-    url = f'{ settings.SUPABASE_URL }/storage/v1/object/public/profile_images/{ name }'
-    headers = {
-        "Authorization" : f'Bearer { settings.SUPABASE_API_KEY }' ,
-        "Content-Type" : file.content_type
-    }
-    response = requests.put( url , data = file.read() , headers = headers )
-    if response.status_code == 200 :
-        return response.json()[ 'publicURL' ] 
-    else :
-        raise Exception( "Failed " + response.text ) 
     
 class UserProfileSerializer( serializers.ModelSerializer ) :
-    nationalities = NationalitySerializer()
-    languages = LanguageSerializer()
+    NationalitySerializer()
+    LanguageSerializer()
     class Meta :
         model = UserProfile 
         fields = [ 'user' , 'profile_image' , 'phone_number' , 'gender' , 'nationalities' , 'languages' ] 
 
 
-class DoctorProfileSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer( source = 'user.profile_owner', read_only = True )
+class DoctorProfileSerializer( serializers.ModelSerializer ):
+    UserProfileSerializer( source = 'user.profile_owner' )
+    SpecializationSerializer() 
+
     class Meta:
         model = DoctorProfile
-        fields = [
-            'id' , 'doc' , 'speicalization' ,'sign' , 'service_type' , 'about_me', 'user_profile' 
-        ] 
+        fields = [ 'user' , 'profile_image' , 'phone_number' , 'gender' , 'nationalities' , 'languages' ,
+                   'speicalization' , 'sign' , 'price' , 'service_type' , 'about_me' ]    
 
