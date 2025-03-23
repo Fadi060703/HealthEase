@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model 
 from rest_framework import status , permissions 
+from rest_framework.permissions import IsAuthenticated , IsAdminUser 
 from rest_framework.request import Request 
 from rest_framework.response import Response 
 from rest_framework.views import APIView 
@@ -29,30 +30,30 @@ class LoginView( TokenObtainPairView ) :
 class SpecializationListCreateView( ListCreateAPIView ) :
     queryset = Speicalization.objects.all() 
     serializer_class = SpecializationSerializer 
-    
+    permission_classes = [ IsAdminUser ] 
 class SpecializationDetailView( RetrieveUpdateDestroyAPIView ) :
     queryset = Speicalization.objects.all() 
     serializer_class = SpecializationSerializer 
-    
+    permission_classes = [ IsAdminUser ]
 class NationalityListCreateView( ListCreateAPIView ) :
     queryset = Nationality.objects.all() 
     serializer_class = NationalitySerializer 
-
+    permission_classes = [ IsAdminUser ]
 class NationalityListDetailView( RetrieveUpdateDestroyAPIView ) :
     queryset = Nationality.objects.all() 
     serializer_class = NationalitySerializer
-
+    permission_classes = [ IsAdminUser ]
 class ListCreateLanguageView( ListCreateAPIView ) :
     queryset = Language.objects.all() 
     serializer_class = LanguageSerializer 
-
+    permission_classes = [ IsAdminUser ]
 class LanguageDetailView( RetrieveUpdateDestroyAPIView ) :
     queryset = Language.objects.all() 
     serializer_class = LanguageSerializer 
-     
+    permission_classes = [ IsAdminUser ] 
 class PatientProfileListCreateView( APIView ) :
     serializer_class = UserProfileSerializer 
-
+    permission_classes = [ IsAuthenticated ]
     def get( self , request : Request ) :
         profiles = UserProfile.objects.all() 
         serializer = self.serializer_class( profiles , many = True ) 
@@ -62,13 +63,13 @@ class PatientProfileListCreateView( APIView ) :
         data = request.data 
         serializer = self.serializer_class( data = data ) 
         if serializer.is_valid() :
-            serializer.save()
+            serializer.save( user = request.user ) 
             return Response( data = serializer.data , status = status.HTTP_201_CREATED )
         return Response( data = serializer.errors , status = status.HTTP_400_BAD_REQUEST ) 
     
 class PatientProfileDetailView( APIView ) :
     serializer_class = UserProfileSerializer 
-
+    parser_classes = [ IsAuthenticated ] 
     def get( self , request : Request , pk : int ) :
         profile = get_object_or_404( UserProfile , pk = pk ) 
         serializer = self.serializer_class( profile ) 
@@ -76,7 +77,7 @@ class PatientProfileDetailView( APIView ) :
     
 class DoctorProfileListCreateView( APIView ) :
     serializer_class = DoctorProfileSerializer
-
+    permission_classes = [ IsAuthenticated ]
     def get( self , request : Request ) :
         profiles = DoctorProfile.objects.all() 
         serializer = self.serializer_class( profiles , many = True ) 
@@ -86,13 +87,13 @@ class DoctorProfileListCreateView( APIView ) :
         data = request.data 
         serializer = self.serializer_class( data = data ) 
         if serializer.is_valid() :
-            serializer.save()
+            serializer.save( user = request.user )
             return Response( data = serializer.data , status = status.HTTP_201_CREATED )
         return Response( data = serializer.errors , status = status.HTTP_400_BAD_REQUEST ) 
     
 class DoctorProfileDetailView( APIView ) :
     serializer_class = DoctorProfileSerializer 
-
+    permission_classes = [ IsAuthenticated ] 
     def get( self , request : Request , pk : int ) :
         profile = get_object_or_404( DoctorProfile , pk = pk ) 
         serializer = self.serializer_class( profile ) 
